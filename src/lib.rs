@@ -51,7 +51,7 @@
 
 #![cfg_attr(feature = "cargo-clippy", allow(clippy::cast_lossless))]
 #![deny(
-    missing_docs,
+    // missing_docs,
     trivial_casts,
     trivial_numeric_casts,
     unused_extern_crates,
@@ -88,6 +88,7 @@ mod tests;
 /// Available encoding character sets
 #[derive(Clone, Copy, Debug)]
 pub enum CharacterSet {
+    Gamespy,
     /// The standard character set (uses `+` and `/`).
     ///
     /// See [RFC 3548](https://tools.ietf.org/html/rfc3548#section-3).
@@ -105,6 +106,7 @@ pub enum CharacterSet {
 impl CharacterSet {
     fn encode_table(self) -> &'static [u8; 64] {
         match self {
+            CharacterSet::Gamespy => tables::GAMESPY_ENCODE,
             CharacterSet::Standard => tables::STANDARD_ENCODE,
             CharacterSet::UrlSafe => tables::URL_SAFE_ENCODE,
             CharacterSet::Crypt => tables::CRYPT_ENCODE,
@@ -113,6 +115,7 @@ impl CharacterSet {
 
     fn decode_table(self) -> &'static [u8; 256] {
         match self {
+            CharacterSet::Gamespy => tables::GAMESPY_DECODE,
             CharacterSet::Standard => tables::STANDARD_DECODE,
             CharacterSet::UrlSafe => tables::URL_SAFE_DECODE,
             CharacterSet::Crypt => tables::CRYPT_DECODE,
@@ -157,6 +160,13 @@ impl Config {
         }
     }
 }
+
+/// Gamespy character set with padding.
+pub const GAMESPY: Config = Config {
+    char_set: CharacterSet::Gamespy,
+    pad: true,
+    decode_allow_trailing_bits: false,
+};
 
 /// Standard character set with padding.
 pub const STANDARD: Config = Config {

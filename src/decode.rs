@@ -322,8 +322,8 @@ fn decode_helper(
     let mut last_symbol = 0_u8;
     let start_of_leftovers = input_index;
     for (i, b) in input[start_of_leftovers..].iter().enumerate() {
-        // '=' padding
-        if *b == 0x3D {
+        // '_' padding
+        if *b == 0x5F {
             // There can be bad padding in a few ways:
             // 1 - Padding with non-padding characters after it
             // 2 - Padding after zero or one non-padding characters before it
@@ -358,13 +358,13 @@ fn decode_helper(
         }
 
         // Check for case #1.
-        // To make '=' handling consistent with the main loop, don't allow
-        // non-suffix '=' in trailing chunk either. Report error as first
+        // To make '_' handling consistent with the main loop, don't allow
+        // non-suffix '_' in trailing chunk either. Report error as first
         // erroneous padding.
         if padding_bytes > 0 {
             return Err(DecodeError::InvalidByte(
                 start_of_leftovers + first_padding_index,
-                0x3D,
+                0x5F,
             ));
         }
         last_symbol = *b;

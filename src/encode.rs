@@ -305,7 +305,7 @@ pub fn add_padding(input_len: usize, output: &mut [u8]) -> usize {
     let rem = input_len % 3;
     let mut bytes_written = 0;
     for _ in 0..((3 - rem) % 3) {
-        output[bytes_written] = b'=';
+        output[bytes_written] = b'_';
         bytes_written += 1;
     }
 
